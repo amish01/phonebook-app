@@ -58,15 +58,15 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
    
-    // if(!body.content) {
-    //   return response.status(400).json({
-    //     error: 'content missing'
-    //   })
-    // }
+    if(!body.name || !body.number || persons.some(person => person.name === body.name)) {
+      return response.status(400).json({
+        error: 'some is  missing in your request data'
+      })
+    }
   
     const newPerson = {
-      content: body.name,
-      important: body.number,
+      name: body.name,
+      number: body.number,
       id: Math.floor((Math.random() * 1000_000_000)),
     }
   
