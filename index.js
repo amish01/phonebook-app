@@ -37,6 +37,7 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
+//Ex_3.3
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
     const person = persons.find(person => person.id === id)
