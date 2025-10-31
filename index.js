@@ -56,6 +56,23 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+ 
+  if(!(body.name||body.number)) {
+    return response.status(400).json({
+      error: 'Name or Number missing'
+    })
+  }
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+  person.save().then(savedAddress => {
+    response.json(savedAddress)
+  })
+})
+
 //Ex_3.3
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
