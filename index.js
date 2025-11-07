@@ -110,7 +110,7 @@ app.post('/api/persons', (request, response) => {
         error: 'Name must be unique.'
       })
     }
-  
+
     const newPerson = {
       name: body.name,
       number: body.number,
@@ -121,6 +121,27 @@ app.post('/api/persons', (request, response) => {
     
     response.json(newPerson)
   })
+
+  //update code
+  app.put('/api/persons/:id', (request, response, next) => {
+    const { name, number  } = request.body
+  
+    Person.findById(request.params.id)
+      .then(person => {
+        if (!person) {
+          return response.status(404).end()
+        }
+  
+        person.name = name
+        person.number = number
+  
+        return person.save().then((updatedPerson) => {
+          response.json(updatedPerson)
+        })
+      })
+      .catch(error => next(error))
+  })
+
 
 //Error handler middleware.
   const errorHandler = (error, request, response, next) => {
