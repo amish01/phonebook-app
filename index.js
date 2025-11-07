@@ -122,7 +122,7 @@ app.post('/api/persons', (request, response) => {
     response.json(newPerson)
   })
 
-
+//Error handler middleware.
   const errorHandler = (error, request, response, next) => {
     console.error(error.message)
   
