@@ -42,14 +42,13 @@ let persons = [
 
 
 app.get('/info', (request, response) => {
+  Person.find({}).then(persons => {
     response.send(`<p>Phonebook has info for ${persons.length} people</p>
-        <p>${new Date()}</p>`)
-   
+      <p>${new Date()}</p>`)
+  })
 })
 
-// app.get('/api/persons', (request, response) => {
-//     response.json(persons)
-// })
+
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
     response.json(persons)
@@ -74,15 +73,27 @@ app.post('/api/persons', (request, response) => {
 })
 
 //Ex_3.3
-app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(person => person.id === id)
-    if(person){
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
+// app.get('/api/persons/:id', (request, response) => {
+//     const id = request.params.id
+//     const person = persons.find(person => person.id === id)
+//     if(person){
+//         response.json(person)
+//     } else {
+//         response.status(404).end()
+//     }
+// })
+
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (!person) {
+        response.status(400).send({ error: 'person info not found' })
+      }
+      return  response.json(person)
+    })
+    .catch(error => next(error))
 })
+
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
