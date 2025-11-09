@@ -70,6 +70,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedAddress => {
     response.json(savedAddress)
   })
+  .catch(error => console.log(error))
 })
 
 //Ex_3.3
