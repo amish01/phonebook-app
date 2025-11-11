@@ -1,25 +1,9 @@
 const mongoose = require('mongoose')
 
-// if (process.argv.length < 3) {
-//   console.log('give password as argument')
-//   process.exit(1)
-// }
-
-//const password = process.argv[2]
-// const newName = process.argv[3]
-// const newNumber = process.argv[4]
-//const password = process.env.password
-
-
-
-// const url = `mongodb+srv://amish2g:${password}@cluster0.xtbuvch.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`
-// mongoose.set('strictQuery',false)
-
 mongoose.set('strictQuery',false)
 
 const url = process.env.MONGODB_URI
 
-//mongoose.connect(url)
 
 console.log('connecting to', url)
 mongoose.connect(url)
@@ -36,15 +20,19 @@ const personSchema = new mongoose.Schema({
     minLength: 3,
     required: true
   },
-  number: String,
+  number: {
+    type: String,
+    minLength: 8,
+    validate: {
+      validator: function(v) {
+        return /\d{2,3}-\d{6,}/.test(v);
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    },
+    required: [true, 'User phone number required']
+  },
 })
 
-//const Person = mongoose.model('Person', personSchema)
-
-// const person = new Person({
-//   name: newName,
-//   number: newNumber,
-// })
 
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
